@@ -1,0 +1,15 @@
+apiVersion: "garden.io/v1"
+kind: Project
+name: terraform-lambda-example
+defaultEnvironment: dev
+dotIgnoreFile: .gitignore
+
+environments:
+  - name: dev
+  - name: ci
+  - name: preview
+
+providers:
+  - name: terraform
+    backendConfig: # <-- This only works on a Garden dev build, soon to be merged
+      key: "tf-state/${environment.name}/terraform.tfstate"
