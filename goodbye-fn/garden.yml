@@ -1,0 +1,33 @@
+kind: Run
+name: build-goodbye-fn
+type: exec
+include: [./index.js]
+spec:
+  command: [./build.sh]
+
+---
+kind: Deploy
+name: goodbye-fn
+type: terraform
+
+source:
+  path: ../
+
+include: [./terraform/goodbye-fn, ./terraform/modules/lambda]
+
+dependencies:
+  - run.build-goodbye-fn
+  - deploy.dynamodb
+
+spec:
+  autoApply: true
+  allowDestroy: true
+  root: ./terraform/goodbye-fn
+  backendConfig:
+    $merge: ${var.backendConfig}
+    key: "tf-state/goodbye-fn/${var.namespaceName}/terraform.tfstate"
+
+  variables:
+    function_name: "${var.namespaceName}-goodbye-fn"
+    environment_name: ${environment.name}
+    db_host: ${actions.deploy.dynamodb.outputs.db_host}

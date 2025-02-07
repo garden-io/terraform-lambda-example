@@ -8,6 +8,3 @@ I set this up)
   main (as of writing). You'll need to remove the `backendConfig` part
   from the `project.garden.yml` file to get it working with current
 versions of Garden.
-- The `zip-lambda` exec action isn't working for some reason. You'd
-need to run the script manually for now.
-

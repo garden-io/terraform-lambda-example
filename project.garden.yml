@@ -4,12 +4,25 @@ name: terraform-lambda-example
 defaultEnvironment: dev
 dotIgnoreFile: .gitignore
 
+id: 57c1acfd-82c6-48e9-b086-65f42c0e898a
+domain: https://example.app.garden
+
+variables:
+  # Replace this with your own backen config. In this project we assume the S3 bucket already exists.
+  backendConfig:
+    bucket: terraform-state-for-dev-testing
+    region: eu-central-1
+
 environments:
   - name: dev
+    variables:
+      namespaceName: dev-${kebabCase(local.username)}
   - name: ci
+    variables:
+      namespaceName: ci-${slice(git.commitHash, 0, 7) || '<detached>'}
   - name: preview
+    variables:
+      namespaceName: preview-${git.branch}
 
 providers:
   - name: terraform
-    backendConfig: # <-- This only works on a Garden dev build, soon to be merged
-      key: "tf-state/${environment.name}/terraform.tfstate"

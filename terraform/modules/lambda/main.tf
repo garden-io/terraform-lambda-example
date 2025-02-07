@@ -47,7 +47,7 @@ variable "tags" {
 
 # IAM role for the Lambda function
 resource "aws_iam_role" "lambda_role" {
-  name = "${var.function_name}-role"
+  name_prefix = "${var.function_name}-role-"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -65,28 +65,21 @@ resource "aws_iam_role" "lambda_role" {
   tags = var.tags
 }
 
-# Basic execution policy for CloudWatch Logs
-resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
-
 # Lambda function
 resource "aws_lambda_function" "function" {
-  filename         = "${path.module}/function.zip"
+  filename         = "${path.root}/function.zip"
   function_name    = var.function_name
   role            = aws_iam_role.lambda_role.arn
   handler         = var.handler
   runtime         = var.runtime
   description     = var.description
-  memory_size     = var.memory_size
-  timeout         = var.timeout
-
+  memory_size         = var.memory_size
+  timeout             = var.timeout
   environment {
     variables = var.environment_variables
   }
-
   tags = var.tags
+
 }
 
 output "function_arn" {

@@ -1,6 +1,6 @@
 const handler = async (event, context) => {
   // Log startup message
-  console.log("Lambda function started:", {
+  console.log("Lambda function 'Hello' started:", {
     functionName: context.functionName,
     functionVersion: context.functionVersion,
     awsRequestId: context.awsRequestId,
@@ -13,7 +13,7 @@ const handler = async (event, context) => {
 
     // Basic response
     const response = {
-      message: "Hello from Lambda!",
+      message: "Hello!",
       timestamp: new Date().toISOString(),
       event: event,
     };
