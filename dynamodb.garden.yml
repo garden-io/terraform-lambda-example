@@ -1,0 +1,22 @@
+kind: Deploy
+name: dynamodb
+type: terraform
+include: [./terraform/dynamodb]
+spec:
+  autoApply: true
+  root: ./terraform/dynamodb
+  backendConfig:
+    $merge: ${var.backendConfig}
+    key: "tf-state/dynamodb/${var.namespaceName}/terraform.tfstate"
+
+  variables:
+    db_name: "my-db"
+---
+kind: Run
+name: dynamodb-output
+type: exec
+dependencies:
+  - deploy.dynamodb
+spec:
+  command:
+    ["echo", "Terraform output is: ${actions.deploy.dynamodb.outputs.db_host}"]

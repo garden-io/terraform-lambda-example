@@ -1,0 +1,69 @@
+kind: Run
+name: prepare-build-e2e-test-runner
+type: exec
+include: [./index.js]
+spec:
+  command: ["echo", "Preparing build..."]
+
+---
+kind: Run
+name: build-e2e-test-runner
+type: exec
+include: []
+spec:
+  command:
+    [
+      /bin/sh,
+      -c,
+      "./build.sh ${actions.run.prepare-build-e2e-test-runner.version}",
+    ]
+
+---
+kind: Deploy
+name: e2e-test-runner
+type: terraform
+
+source:
+  path: ../
+
+dependencies:
+  - run.build-e2e-test-runner
+  - deploy.hello-fn
+
+spec:
+  autoApply: true
+  allowDestroy: true
+  root: ./terraform/e2e-test-runner
+  backendConfig:
+    $merge: ${var.backendConfig}
+    key: "tf-state/e2e-test-runner/${var.namespaceName}/terraform.tfstate"
+
+  variables:
+    zip_version: ${actions.run.prepare-build-e2e-test-runner.version}
+    function_name: ${var.e2eTestRunnerName}
+    hello_function_name: ${var.helloFnName}
+    goodbye_function_name: ${var.goodbyeFnName}
+    environment_name: ${environment.name}
+    db_host: ${actions.deploy.dynamodb.outputs.db_host}
+
+---
+kind: Test
+name: e2e-test
+type: exec
+
+dependencies:
+  - deploy.goodbye-fn
+  - deploy.hello-fn
+  - deploy.e2e-test-runner
+
+spec:
+  command:
+    - /bin/sh
+    - -c
+    - |
+      aws lambda invoke \
+        --function-name ${var.e2eTestRunnerName} \
+        --invocation-type RequestResponse \
+        --no-cli-pager \
+        --log-type Tail \
+        /dev/null | jq -r '.LogResult' | base64 -d
