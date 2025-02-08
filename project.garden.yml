@@ -4,6 +4,7 @@ name: terraform-lambda-example
 defaultEnvironment: dev
 dotIgnoreFile: .gitignore
 
+# Replace this with your project ID and Garden Cloud/Enterprise domain
 id: 57c1acfd-82c6-48e9-b086-65f42c0e898a
 domain: https://example.app.garden
 
