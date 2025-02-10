@@ -28,6 +28,7 @@ spec:
     key: "tf-state/goodbye-fn/${var.namespaceName}/terraform.tfstate"
 
   variables:
+    zip_version: ${actions.run.build-goodbye-fn.version}
     function_name: "${var.namespaceName}-goodbye-fn"
     environment_name: ${environment.name}
     db_host: ${actions.deploy.dynamodb.outputs.db_host}
