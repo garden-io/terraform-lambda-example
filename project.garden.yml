@@ -27,3 +27,4 @@ environments:
 
 providers:
   - name: terraform
+    streamLogsToCloud: true

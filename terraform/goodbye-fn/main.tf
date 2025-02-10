@@ -2,9 +2,9 @@ terraform {
   required_version = ">= 0.12"
   backend "s3" {
     # Overwritten in Garden config
-    bucket = "terraform-state-for-dev-testing"
-    key    = "default/terraform.tfstate"
-    region = "eu-central-1"
+    bucket = ""
+    key    = ""
+    region = ""
   }
 }
 
