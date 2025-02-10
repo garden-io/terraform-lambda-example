@@ -27,6 +27,7 @@ spec:
     key: "tf-state/hello-fn/${var.namespaceName}/terraform.tfstate"
 
   variables:
+    zip_version: ${actions.run.build-hello-fn.version}
     function_name: "${var.namespaceName}-hello-fn"
     environment_name: ${environment.name}
     db_host: ${actions.deploy.dynamodb.outputs.db_host}

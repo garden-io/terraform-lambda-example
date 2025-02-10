@@ -15,6 +15,12 @@ variable "function_name" {
 }
 
 # Supplied via Garden config
+variable "zip_version" {
+  description = "version of the zip file"
+  type        = string
+}
+
+# Supplied via Garden config
 variable "environment_name" {
   description = "Name of the environment"
   type        = string
@@ -37,6 +43,7 @@ module "lambda_function" {
   environment_variables = {
     NODE_ENV = "production"
     DB_HOST = var.db_host
+    ZIP_VERSION = var.zip_version
   }
   tags = {
     Environment = var.environment_name
