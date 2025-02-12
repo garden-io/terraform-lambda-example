@@ -1,9 +1,18 @@
 kind: Run
-name: build-hello-fn
+name: prepare-build-hello-fn
 type: exec
 include: [./index.js]
 spec:
-  command: [./build.sh]
+  command: ["echo", "Preparing build..."]
+
+---
+kind: Run
+name: build-hello-fn
+type: exec
+include: []
+spec:
+  command:
+    [/bin/sh, -c, "./build.sh ${actions.run.prepare-build-hello-fn.version}"]
 
 ---
 kind: Deploy
@@ -13,7 +22,6 @@ type: terraform
 source:
   path: ../
 
-include: [./terraform/hello-fn, ./terraform/modules/lambda]
 dependencies:
   - run.build-hello-fn
   - deploy.dynamodb
@@ -27,7 +35,7 @@ spec:
     key: "tf-state/hello-fn/${var.namespaceName}/terraform.tfstate"
 
   variables:
-    zip_version: ${actions.run.build-hello-fn.version}
-    function_name: "${var.namespaceName}-hello-fn"
+    zip_version: ${actions.run.prepare-build-hello-fn.version}
+    function_name: ${var.helloFnName}
     environment_name: ${environment.name}
     db_host: ${actions.deploy.dynamodb.outputs.db_host}

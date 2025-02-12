@@ -65,9 +65,33 @@ resource "aws_iam_role" "lambda_role" {
   tags = var.tags
 }
 
+resource "aws_iam_role_policy" "lambda_invoke" {
+  name = "lambda-invoke"
+  role = aws_iam_role.lambda_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "lambda:InvokeFunction"
+        ]
+        Resource = "arn:aws:lambda:*:*:function:*"  # You might want to restrict this
+      }
+    ]
+  })
+}
+
+# Basic execution policy for CloudWatch Logs
+resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
 # Lambda function
 resource "aws_lambda_function" "function" {
-  filename         = "${path.root}/function.zip"
+  filename         = "${path.root}/function-${var.environment_variables.ZIP_VERSION}.zip"
   function_name    = var.function_name
   role            = aws_iam_role.lambda_role.arn
   handler         = var.handler
@@ -80,6 +104,13 @@ resource "aws_lambda_function" "function" {
   }
   tags = var.tags
 
+}
+
+# CloudWatch Log Group
+resource "aws_cloudwatch_log_group" "lambda_logs" {
+  name              = "/aws/lambda/${var.function_name}"
+  retention_in_days = 3
+  tags             = var.tags
 }
 
 output "function_arn" {
