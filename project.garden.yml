@@ -5,14 +5,14 @@ defaultEnvironment: dev
 dotIgnoreFile: .gitignore
 
 # Replace this with your project ID and Garden Cloud/Enterprise domain
-id: 57c1acfd-82c6-48e9-b086-65f42c0e898a
-domain: https://example.app.garden
+# id: <garden-project-id>
+# domain: https://my-garden-app.app.garden
 
 variables:
   # Replace this with your own backen config. In this project we assume the S3 bucket already exists.
   backendConfig:
-    bucket: terraform-state-for-dev-testing
-    region: eu-central-1
+    bucket: ${local.env.AWS_S3_BUCKET || "terraform-state-for-dev-testing"}
+    region: ${local.env.AWS_REGION || "eu-central-1"}
 
 environments:
   - name: dev

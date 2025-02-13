@@ -3,10 +3,10 @@
 This example project demonstrates how to use Garden to create on-demand environments for an AWS Lambda stack provisioned via Terraform—and in general manage Terraform projects with Garden.
 
 > [!NOTE]
-> The project is currently configured to use an S3 bucket that exists in the Garden internal AWS developer account. See below for how to change this.
+> To use this project you need access to a AWS and permissions to create folders in S3 buckets and AWS lambda functions.
 
 > [!WARNING]  
-> The dynamic backend config functionality used is still under development and not on the Garden Core `main` branch yet (as of writing). This project won't work until that's complete.
+> The dynamic backend config functionality used is currently only available on a Garden edge release but due .
 
 ## Using this project
 
