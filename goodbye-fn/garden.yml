@@ -1,9 +1,18 @@
 kind: Run
-name: build-goodbye-fn
+name: prepare-build-goodbye-fn
 type: exec
 include: [./index.js]
 spec:
-  command: [./build.sh]
+  command: ["echo", "Preparing build..."]
+
+---
+kind: Run
+name: build-goodbye-fn
+type: exec
+include: []
+spec:
+  command:
+    [/bin/sh, -c, "./build.sh ${actions.run.prepare-build-goodbye-fn.version}"]
 
 ---
 kind: Deploy
@@ -12,8 +21,6 @@ type: terraform
 
 source:
   path: ../
-
-include: [./terraform/goodbye-fn, ./terraform/modules/lambda]
 
 dependencies:
   - run.build-goodbye-fn
@@ -28,7 +35,7 @@ spec:
     key: "tf-state/goodbye-fn/${var.namespaceName}/terraform.tfstate"
 
   variables:
-    zip_version: ${actions.run.build-goodbye-fn.version}
-    function_name: "${var.namespaceName}-goodbye-fn"
+    zip_version: ${actions.run.prepare-build-goodbye-fn.version}
+    function_name: ${var.goodbyeFnName}
     environment_name: ${environment.name}
     db_host: ${actions.deploy.dynamodb.outputs.db_host}

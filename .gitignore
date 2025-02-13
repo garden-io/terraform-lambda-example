@@ -99,4 +99,4 @@ override.tf.json
 terraform.rc
 
 # Lambda deployment packages
-**/function.zip
+**/function*.zip
