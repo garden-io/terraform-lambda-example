@@ -26,13 +26,13 @@ environments:
     variables:
       namespaceName: ci-${slice(git.commitHash, 0, 7) || '<detached>'}
       helloFnName: ${var.namespaceName}-hello-fn
-      goodByeFnName: ${var.namespaceName}-goodbye-fn
+      goodbyeFnName: ${var.namespaceName}-goodbye-fn
       e2eTestRunnerName: ${var.namespaceName}-e2e-test-runner
   - name: preview
     variables:
       namespaceName: preview-${git.branch}
       helloFnName: ${var.namespaceName}-hello-fn
-      goodByeFnName: ${var.namespaceName}-goodbye-fn
+      goodbyeFnName: ${var.namespaceName}-goodbye-fn
       e2eTestRunnerName: ${var.namespaceName}-e2e-test-runner
 
 providers:
