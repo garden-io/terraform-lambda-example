@@ -5,8 +5,8 @@ This example project demonstrates how to use Garden to create on-demand environm
 > [!NOTE]
 > You'll need to update some values in the project level Garden config file for this project to work. See instructions below.
 
-> [!WARNING]  
-> The dynamic backend config functionality used is currently only available on a Garden edge release but due to be released in Garden 0.13.54.
+> [!NOTE]  
+> The dynamic backend config functionality used is only available on Garden versions 0.13.54 or higher.
 
 ## Requirements
 
